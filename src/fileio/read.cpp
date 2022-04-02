@@ -20,7 +20,8 @@
 #include "../SceneObjects/Sphere.h"
 #include "../SceneObjects/Square.h"
 #include "../scene/light.h"
-
+#include <iostream>
+using namespace std;
 typedef map<string,Material*> mmap;
 
 static void processObject( Obj *obj, Scene *scene, mmap& materials );
@@ -296,7 +297,7 @@ static void processGeometry( string name, Obj *child, Scene *scene,
     } else {
 		SceneObject *obj = NULL;
        	Material *mat;
-        
+		Obj*  translate;
         //if( hasField( child, "material" ) )
         mat = getMaterial(getField( child, "material" ), materials );
         //else
@@ -305,7 +306,9 @@ static void processGeometry( string name, Obj *child, Scene *scene,
 		if( name == "sphere" ) {
 			obj = new Sphere( scene, mat );
 		} else if( name == "box" ) {
+			mat = getMaterial(getField(child, "material"), materials);
 			obj = new Box( scene, mat );
+
 		} else if( name == "cylinder" ) {
 			obj = new Cylinder( scene, mat );
 		} else if( name == "cone" ) {

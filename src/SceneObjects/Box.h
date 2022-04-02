@@ -7,12 +7,18 @@ class Box
 	: public MaterialSceneObject
 {
 public:
+	BoundingBox b;
 	Box( Scene *scene, Material *mat )
 		: MaterialSceneObject( scene, mat )
 	{
-	}
+	
 
+	b=	ComputeLocalBoundingBox();
+	}
+	bool capped; //not sure what it means
+	
 	virtual bool intersectLocal( const ray& r, isect& i ) const;
+	virtual bool intersectBody(const ray& r, isect& i) const ;
 	virtual bool hasBoundingBoxCapability() const { return true; }
     virtual BoundingBox ComputeLocalBoundingBox()
     {
