@@ -42,7 +42,10 @@ public:
 	vec3f( const vec3f& v )
 		{ n[0] = v.n[0]; n[1] = v.n[1]; n[2] = v.n[2]; }
 	vec3f( const vec4f& v4 );
-
+	vec3f multEach(const vec3f& v) const {
+		vec3f result = { (*this)[0] * v[0],	(*this)[1] * v[1],	(*this)[2] * v[2] };
+		return result;
+	}
 	vec3f& operator	=( const vec3f& v )
 		{ n[0] = v.n[0]; n[1] = v.n[1]; n[2] = v.n[2]; return *this; }
 	vec3f& operator +=( const vec3f& v )
@@ -58,6 +61,10 @@ public:
 		{ return n[i]; }
 	double operator []( int i ) const 
 		{ return n[i]; }
+	double distance(const vec3f v) const {
+		vec3f v2 = vec3f((*this)[0] - v[0], (*this)[1] - v[1], (*this)[2] - v[2]);
+		return  v2.length();
+	}
 
 	// Cross product between this and 'b'
 	vec3f cross(const vec3f& b) const

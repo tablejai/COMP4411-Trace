@@ -88,7 +88,6 @@ bool Geometry::intersect(const ray&r, isect&i) const
         // Transform the intersection point & normal returned back into global space.
 		i.N = transform->localToGlobalCoordsNormal(i.N);
 		i.t /= length;
-
 		return true;
     } else {
         return false;
@@ -98,6 +97,7 @@ bool Geometry::intersect(const ray&r, isect&i) const
 
 bool Geometry::intersectLocal( const ray& r, isect& i ) const
 {
+	
 	return false;
 }
 
@@ -152,6 +152,7 @@ bool Scene::intersect( const ray& r, isect& i ) const
 		if( (*j)->intersect( r, cur ) ) {
 			if( !have_one || (cur.t < i.t) ) {
 				i = cur;
+				//cout << cur.obj->getMaterial().kt[0] << "from scene inter" << endl;
 				have_one = true;
 			}
 		}
@@ -163,6 +164,8 @@ bool Scene::intersect( const ray& r, isect& i ) const
 			if( !have_one || (cur.t < i.t) ) {
 				i = cur;
 				have_one = true;
+				cout << cur.obj->getMaterial().kt[0] << "from scene inter" << endl;
+
 			}
 		}
 	}

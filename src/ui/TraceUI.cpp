@@ -246,6 +246,19 @@ TraceUI::TraceUI() {
 		m_sizeSlider->align(FL_ALIGN_RIGHT);
 		m_sizeSlider->callback(cb_sizeSlides);
 
+		//m_sizeSlider = new Fl_Value_Slider(10, 55, 180, 20, "Ambient");
+		//m_sizeSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		//m_sizeSlider->type(FL_HOR_NICE_SLIDER);
+		//m_sizeSlider->labelfont(FL_COURIER);
+		//m_sizeSlider->labelsize(12);
+		//m_sizeSlider->minimum(64);
+		//m_sizeSlider->maximum(512);
+		//m_sizeSlider->step(1);
+		//m_sizeSlider->value(m_nSize);
+		//m_sizeSlider->align(FL_ALIGN_RIGHT);
+		//m_sizeSlider->callback(cb_sizeSlides);
+
+
 		m_renderButton = new Fl_Button(240, 27, 70, 25, "&Render");
 		m_renderButton->user_data((void*)(this));
 		m_renderButton->callback(cb_render);

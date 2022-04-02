@@ -302,11 +302,11 @@ static void processGeometry( string name, Obj *child, Scene *scene,
         mat = getMaterial(getField( child, "material" ), materials );
         //else
         //    mat = new Material();
-
+	
 		if( name == "sphere" ) {
 			obj = new Sphere( scene, mat );
 		} else if( name == "box" ) {
-			mat = getMaterial(getField(child, "material"), materials);
+			//mat = getMaterial(getField(child, "material"), materials);
 			obj = new Box( scene, mat );
 
 		} else if( name == "cylinder" ) {
@@ -442,7 +442,8 @@ static Material *processMaterial( Obj *child, mmap *bindings )
     }
     if( hasField( child, "transmissive" ) ) {
         mat->kt = tupleToVec( getField( child, "transmissive" ) );
-    }
+		cout << mat->kt[0] << "," << mat->kt[1] << ","<<mat->kt[2] << ","<<endl;
+	}
     if( hasField( child, "index" ) ) { // index of refraction
         mat->index = getField( child, "index" )->getScalar();
     }
@@ -471,7 +472,16 @@ static Material *processMaterial( Obj *child, mmap *bindings )
 
     return mat;
 }
-
+static void processAmbientLight(Obj* child, Scene* scene) {
+	if (hasField(child, "color")) {
+		 const vector<Obj*>& color = getField(child, "color")->getTuple();
+		 scene->Ia = vec3f{color[0]->getScalar(),color[1]->getScalar(),color[2]->getScalar()};
+		 cout << scene->Ia[0] << endl;
+		 cout << scene->Ia[1] << endl;
+		 cout << scene->Ia[2] << endl;
+		// scene->Ia = 0.299 * color.at(0)->getScalar() + 0.587 * color.at(1)->getScalar() + 0.144 * color.at(2)->getScalar();
+	}
+}
 static void
 processCamera( Obj *child, Scene *scene )
 {
@@ -531,10 +541,22 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 		if( child == NULL ) {
 			throw ParseError( "No info for point_light" );
 		}
+		PointLight* pt = new PointLight(scene,
+			tupleToVec(getField(child, "position")),
+			tupleToVec(getColorField(child))
+		);
+		if (hasField(child,"constant_attenuation_coeff")) {
+			pt->c = getField(child, "constant_attenuation_coeff")->getScalar();
+		}
+		if (hasField(child, "linear_attenuation_coedd")) {
+			pt->l = getField(child, "linear_attenuation_coeff")->getScalar();
+		}
+		if(hasField(child,"quadratic_attenuation_coeff"))
+			pt->q= getField(child, "quadratic_attenuation_coeff")->getScalar();
+		scene->add(
+			pt
+			);
 
-		scene->add( new PointLight( scene, 
-			tupleToVec( getField( child, "position" ) ),
-			tupleToVec( getColorField( child ) ) ) );
 	} else if( 	name == "sphere" ||
 				name == "box" ||
 				name == "cylinder" ||
@@ -552,7 +574,11 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 		processMaterial( child, &materials );
 	} else if( name == "camera" ) {
 		processCamera( child, scene );
-	} else {
+	} 
+	else if (name == "ambient_light") {
+		processAmbientLight(child,scene);
+	}
+	else {
 		throw ParseError( string( "Unrecognized object: " ) + name );
 	}
 }

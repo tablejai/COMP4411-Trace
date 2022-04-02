@@ -16,6 +16,8 @@ using namespace std;
 #include "material.h"
 #include "camera.h"
 #include "../vecmath/vecmath.h"
+#include <string>
+
 
 class Light;
 class Scene;
@@ -135,8 +137,12 @@ public:
 // spatial subdivision could be expressed in terms of Geometry instances.
 class Geometry
 	: public SceneElement
-{
+{   
+
+
 public:
+	string name = "";
+
     // intersections performed in the global coordinate space.
     virtual bool intersect(const ray&r, isect&i) const;
     
@@ -241,6 +247,8 @@ protected:
 class Scene
 {
 public:
+
+
 	typedef list<Light*>::iterator 			liter;
 	typedef list<Light*>::const_iterator 	cliter;
 
@@ -250,6 +258,8 @@ public:
     TransformRoot transformRoot;
 
 public:
+
+
 	Scene() 
 		: transformRoot(), objects(), lights() {}
 	virtual ~Scene();
@@ -264,7 +274,8 @@ public:
 
 	bool intersect( const ray& r, isect& i ) const;
 	void initScene();
-
+	vec3f Ia = {0,0,0};
+	
 	list<Light*>::const_iterator beginLights() const { return lights.begin(); }
 	list<Light*>::const_iterator endLights() const { return lights.end(); }
         

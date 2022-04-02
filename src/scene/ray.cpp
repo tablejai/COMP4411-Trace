@@ -5,5 +5,8 @@
 const Material &
 isect::getMaterial() const
 {
-    return material ? *material : obj->getMaterial();
+ 
+        return material ? *material : obj->getMaterial();
+  
+   
 }

@@ -6,10 +6,13 @@
 class Cylinder
 	: public MaterialSceneObject
 {
+
+
 public:
 	Cylinder( Scene *scene, Material *mat , bool cap = true)
 		: MaterialSceneObject( scene, mat ), capped( cap )
 	{
+		this->name = "cylinder";
 	}
 
 	virtual bool intersectLocal( const ray& r, isect& i ) const;
