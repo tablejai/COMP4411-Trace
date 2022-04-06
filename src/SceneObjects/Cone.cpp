@@ -56,7 +56,6 @@ bool Cone::intersectBody( const ray& r, isect& i ) const
             i.N = vec3f( P[0], P[1], 
               -(C*P[2]+(t_radius-b_radius)*t_radius/height)).normalize();
 				
-			
 			return true;
 		}
 	}
