@@ -280,9 +280,10 @@ public:
 	list<Light*>::const_iterator endLights() const { return lights.end(); }
         
 	Camera *getCamera() { return &camera; }
+
+	double threshold;
 	
 
-private:
     list<Geometry*> objects;
 	list<Geometry*> nonboundedobjects;
 	list<Geometry*> boundedobjects;

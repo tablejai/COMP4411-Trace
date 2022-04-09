@@ -32,6 +32,9 @@ public:
 	int m_height=0;
 	double wbackground = 0;
 	double hbackground = 0;
+	Scene* getScene() {
+		return scene;
+	}
 
 private:
 	int buffer_width, buffer_height;

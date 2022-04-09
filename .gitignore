@@ -1,2 +1,8 @@
 
 Debug/
+
+Release/
+
+*.ipch
+
+.vs/ray/v16/

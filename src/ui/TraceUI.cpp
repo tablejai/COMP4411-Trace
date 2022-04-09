@@ -122,7 +122,7 @@ void TraceUI::cb_depthSlides(Fl_Widget* o, void* v)
 
 void TraceUI::cb_thresholdSlides(Fl_Widget* o, void* v)
 {
-	((TraceUI*)(o->user_data()))->m_nThreshold=int( ((Fl_Slider *)o)->value() ) ;
+	((TraceUI*)(o->user_data()))->m_nThreshold=( ((Fl_Slider *)o)->value() ) ;
 }
 
 void TraceUI::cb_render(Fl_Widget* o, void* v)
@@ -130,8 +130,10 @@ void TraceUI::cb_render(Fl_Widget* o, void* v)
 	char buffer[256];
 
 	TraceUI* pUI=((TraceUI*)(o->user_data()));
+
 	
 	if (pUI->raytracer->sceneLoaded()) {
+		pUI->raytracer->getScene()->threshold = pUI->m_nThreshold;
 		int width=pUI->getSize();
 		int	height = (int)(width / pUI->raytracer->aspectRatio() + 0.5);
 		pUI->m_traceGlWindow->resizeWindow( width, height );
