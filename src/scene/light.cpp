@@ -11,8 +11,8 @@ double DirectionalLight::distanceAttenuation( const vec3f& P ) const
 
 vec3f DirectionalLight::shadowAttenuation( const vec3f& P ) const
 {
-    // YOUR CODE HERE:
-    // You should implement shadow-handling code here.
+
+	return { 1,1,1 };
 	isect I = isect();
 	vec3f result = { 1, 1, 1 };
 	ray ry(P, getDirection(P));
@@ -32,6 +32,7 @@ vec3f DirectionalLight::shadowAttenuation( const vec3f& P ) const
 		result[2] *= (I.getMaterial().kt)[2];
 	}
 	return result;
+
 }
 
 vec3f DirectionalLight::getColor() const
@@ -87,28 +88,51 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 {
     // YOUR CODE HERE:
     // You should implement shadow-handling code here.
-	ray ry(position,(position-P).normalize());
-	isect I;
+//	ray ry(position,(position-P).normalize());
+//	isect I;
+//	double distance = P.distance(position);
+//	vec3f Q = ry.at(I.t);
+//	vec3f d = ry.getDirection();
+//	vec3f result = { 1, 1, 1 };
+//	while (scene->intersect(ry, I)) {
+//		/*if ((distance -I.t) < RAY_EPSILON) 
+//		{
+//			cout << "xxx" << endl;
+//			return vec3f{0,0,0};
+//		}*/
+//		Q = ry.at(I.t);
+//		ry = ray(Q, d);
+//		result[0]*=(I.getMaterial().kt)[0];
+//		result[1] *= (I.getMaterial().kt)[1];
+//		result[2] *= (I.getMaterial().kt)[2];
+////		cout << (I.getMaterial().kt)[1] << endl;
+//	}
+//
+//	/*if (I.getMaterial() != nullptr)
+//	else
+//		cout << "null" << endl;*/
+//    return result;
 	double distance = P.distance(position);
-	vec3f Q = ry.at(I.t);
-	vec3f d = ry.getDirection();
-	vec3f result = { 1, 1, 1 };
-	while (scene->intersect(ry, I)) {
-		/*if ((distance -I.t) < RAY_EPSILON) 
-		{
-			cout << "xxx" << endl;
-			return vec3f{0,0,0};
-		}*/
-		Q = ry.at(I.t);
-		ry = ray(Q, d);
-		result[0]*=(I.getMaterial().kt)[0];
-		result[1] *= (I.getMaterial().kt)[1];
-		result[2] *= (I.getMaterial().kt)[2];
-//		cout << (I.getMaterial().kt)[1] << endl;
+	vec3f d = (position - P).normalize();
+	ray r(P, d);
+	vec3f atten = { 1, 1, 1 };
+	vec3f tempP = P;
+	isect isec;
+	ray tempr(r);
+	// recursively find intersection
+	while (scene->intersect(tempr, isec)) {
+		//printf("intersection\n");
+		// intersection is not before light
+		if ((distance -= isec.t) < RAY_EPSILON) { return atten; }
+		// a totally un-transparent object
+		cout << isec.getMaterial().kt[0] << ',' <<
+			isec.getMaterial().kt[1] << ',' <<
+			isec.getMaterial().kt[2] << endl;
+		if (isec.getMaterial().kt.iszero()) return { 0,0,0 };
+		tempP = tempr.at(isec.t);
+		tempr = ray(tempP, d);
+		atten = atten.multEach(isec.getMaterial().kt);
 	}
-
-	/*if (I.getMaterial() != nullptr)
-	else
-		cout << "null" << endl;*/
-    return result;
+	// std::cout << atten << std::endl;
+	return atten;
 }

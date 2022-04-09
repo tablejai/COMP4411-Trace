@@ -9,6 +9,8 @@
 #include "fileio/read.h"
 #include "fileio/parse.h"
 #include  "ui/TraceUI.h"
+# define M_PI           3.14159265358979323846  /* pi */
+
 extern TraceUI* traceUI;
 // Trace a top-level ray through normalized window coordinates (x,y)
 // through the projection plane, and out into the scene.  All we do is
@@ -23,15 +25,31 @@ vec3f RayTracer::trace( Scene *scene, double x, double y )
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
 // (or places called from here) to handle reflection, refraction, etc etc.
+bool TIR(ray r, isect i, double n_i, double n_t) {
+	return (
+		pow(i.N.normalize().dot(r.getDirection().normalize()), 2) <=1 - pow(n_t / n_i, 2));
+}
+vec3f retractDirection(ray r, isect i, double n_i, double n_t, bool flipNormal) {
+	vec3f ret(0, 0, 0);
+	vec3f n = i.N;
+	if (flipNormal) { n *= -1; }
+	vec3f v = r.getDirection().normalize();
 
-
+	for (int i = 0; i < 3; i++) {
+		ret[i] = n_i / n_t * (
+			(sqrt(pow(n.dot(v), 2) + pow(n_t / n_i, 2) - 1) - n.dot(v)) * n[i] + v[i]
+			);
+	}
+	return ret;
+}
 vec3f RayTracer::traceRay( Scene *scene, const ray& r, 
 	const vec3f& thresh, int depth )
 {
 	isect i;
 	if (depth == -1)
 		return { 0,0,0 };
-	
+	double n_i;
+	double n_t;
 	if( scene->intersect( r, i ) ) {
 		// YOUR CODE HERE
 
@@ -43,17 +61,40 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		// Instead of just returning the result of shade(), add some
 		// more steps: add in the contributions from reflected and refracted
 		// rays.
-
 		const Material& m = i.getMaterial();
-
 		vec3f I = m.shade(scene, r, i);
 		vec3f N = i.N;
 		vec3f Li = -r.getDirection();
 		vec3f R = (2 * N.dot(Li) * N - Li);
 		R = R.normalize();
 		ray r2 = ray(r.at(i.t), R);
-			I += (m.kr.multEach(traceRay(scene, r2, R, depth - 1)));
-			return I;
+	  I += (m.kr.multEach(traceRay(scene, r2, thresh, depth - 1)));
+	   double angle;
+	   bool normal_flip;
+	   if (r.getDirection().dot(i.N)<0) { //into
+		   n_i =1;
+		   n_t = m.index;
+		   normal_flip = false;
+	   }
+	   else {
+		   n_i = m.index;
+		   n_t = 1;
+		   normal_flip = true;
+
+	   }
+	  /* if (m.kt[0]>0 && m.kt[1] > 0 && m.kt[2] > 0 &&!TIR(r,i,n_i,n_t)) {
+		   vec3f normN = N.normalize();
+		   vec3f dir = r.getDirection().normalize();
+		   if (normal_flip)
+			   normN = { -normN[0],-normN[1],-normN[2] };
+		   vec3f T = (n_i / n_t) * (normN.cross(-normN.cross(dir))) -  sqrt(1 - pow(n_i / n_t, 2) * (normN.cross(dir).dot(normN.cross(dir))))*normN;
+		   ray r3 = ray(r.at(i.t), T.normalize());
+		   
+		   I += (m.kt.multEach(traceRay(scene, r3, thresh, depth-1)));
+	   }*/
+	  return I.clamp();
+
+
 	} else {
 		// No intersection.  This ray travels to infinity, so we color
 		// it according to the background color, which in this (simple) case
@@ -62,6 +103,8 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		return vec3f( 0.0, 0.0, 0.0 );
 	}
 
+
+	
 }
 
 RayTracer::RayTracer()
