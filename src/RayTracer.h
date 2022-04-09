@@ -25,6 +25,9 @@ public:
 	bool loadScene( char* fn );
 
 	bool sceneLoaded();
+	Scene* getScene() {
+		return scene;
+	}
 
 private:
 	unsigned char *buffer;
