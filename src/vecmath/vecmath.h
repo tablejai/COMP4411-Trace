@@ -65,6 +65,7 @@ public:
 		vec3f v2 = vec3f((*this)[0] - v[0], (*this)[1] - v[1], (*this)[2] - v[2]);
 		return  v2.length();
 	}
+	
 
 	// Cross product between this and 'b'
 	vec3f cross(const vec3f& b) const
