@@ -9,7 +9,8 @@
 
 #include "../vecmath/vecmath.h"
 #include "material.h"
-
+#include <cmath>
+#define abs(x) ((x)>0?x:-x)
 class SceneObject;
 
 // A ray has a position where the ray starts, and a direction (which should
@@ -31,7 +32,10 @@ public:
 
 	vec3f getPosition() const { return p; }
 	vec3f getDirection() const { return d; }
-
+    double getDistance(vec3f pt) {
+        double t0 = d.dot(pt - p) / d.dot(d);
+        return (pt - (p+t0*d)).length();
+    }
 protected:
 	vec3f p;
 	vec3f d;

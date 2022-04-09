@@ -280,7 +280,6 @@ public:
 	list<Light*>::const_iterator endLights() const { return lights.end(); }
         
 	Camera *getCamera() { return &camera; }
-
 	
 
 private:

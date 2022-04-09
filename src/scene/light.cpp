@@ -11,10 +11,9 @@ double DirectionalLight::distanceAttenuation( const vec3f& P ) const
 
 vec3f DirectionalLight::shadowAttenuation( const vec3f& P ) const
 {
-
+	
 	return { 1,1,1 };
-	isect I = isect();
-	vec3f result = { 1, 1, 1 };
+	/*vec3f result = { 1, 1, 1 };
 	ray ry(P, getDirection(P));
 	vec3f Q = ry.at(I.t);
 
@@ -31,7 +30,7 @@ vec3f DirectionalLight::shadowAttenuation( const vec3f& P ) const
 		result[1] *= (I.getMaterial().kt)[1];
 		result[2] *= (I.getMaterial().kt)[2];
 	}
-	return result;
+	return result;*/
 
 }
 
@@ -112,6 +111,7 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 //	else
 //		cout << "null" << endl;*/
 //    return result;
+
 	double distance = P.distance(position);
 	vec3f d = (position - P).normalize();
 	ray r(P, d);

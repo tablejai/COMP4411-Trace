@@ -25,13 +25,20 @@ public:
 	bool loadScene( char* fn );
 
 	bool sceneLoaded();
+	unsigned char* buffer;
+	double dist = 2;
+	unsigned char* backgroundImage=nullptr;
+	int m_width=0;
+	int m_height=0;
+	double wbackground = 0;
+	double hbackground = 0;
 
 private:
-	unsigned char *buffer;
 	int buffer_width, buffer_height;
 	int bufferSize;
-	Scene *scene;
 
+	Scene *scene;
+	vec3f origin;//background
 	bool m_bSceneLoaded;
 };
 

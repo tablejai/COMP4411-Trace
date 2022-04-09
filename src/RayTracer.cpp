@@ -10,16 +10,43 @@
 #include "fileio/parse.h"
 #include  "ui/TraceUI.h"
 # define M_PI           3.14159265358979323846  /* pi */
+#define Map(A,i,j,W)  *((char*)A+(i+ 3 * (W)*j))
 
 extern TraceUI* traceUI;
 // Trace a top-level ray through normalized window coordinates (x,y)
 // through the projection plane, and out into the scene.  All we do is
 // enter the main ray-tracing method, getting things started by plugging
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of 0.
+vec3f intersectPlane(Scene* scene, ray r,vec3f n, vec3f p0) {
+	vec3f dir = r.getDirection();
+	float denom = n.dot(dir);
+	float t = 0;
+	vec3f target(0,0,0);
+	if (denom > 1e-6) {
+		vec3f p = p0 - r.getPosition();
+		t = p.dot(n) / denom;
+		target = t * r.getDirection() + r.getPosition();
+	}
+	return target;
+}
 vec3f RayTracer::trace( Scene *scene, double x, double y )
 {
-    ray r( vec3f(0,0,0), vec3f(0,0,0) );
-    scene->getCamera()->rayThrough( x,y,r );
+	vec3f n = scene->getCamera()->look.normalize();
+	vec3f p0 = n * dist;
+	ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+	scene->getCamera()->rayThrough(x, y, r);
+	if(x==0&&y==0)
+		 origin = intersectPlane(scene,r,n,p0);
+	if (x >= 0.98 && y>=0.98) {
+		vec3f ldir = scene->getCamera()->u.normalize();//idont konw
+		vec3f udir = scene->getCamera()->u.cross(scene->getCamera()->look).normalize(); //it wierd but is fact
+		ray topline = ray(origin, -ldir);
+		ray rightline = ray(origin, -udir);
+		vec3f target  = intersectPlane(scene, r, n, p0);
+		hbackground = topline.getDistance(target);
+		wbackground = rightline.getDistance(target);
+		cout << wbackground << "," << hbackground << endl;
+	}
 	return traceRay( scene, r, vec3f(1.0,1.0,1.0), traceUI->getDepth()).clamp();
 }
 
@@ -45,9 +72,13 @@ vec3f retractDirection(ray r, isect i, double n_i, double n_t, bool flipNormal) 
 vec3f RayTracer::traceRay( Scene *scene, const ray& r, 
 	const vec3f& thresh, int depth )
 {
+
+
 	isect i;
 	if (depth == -1)
-		return { 0,0,0 };
+	{
+		return vec3f(0.0, 0.0, 0.0);
+	};
 	double n_i;
 	double n_t;
 	if( scene->intersect( r, i ) ) {
@@ -82,7 +113,7 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		   normal_flip = true;
 
 	   }
-	  /* if (m.kt[0]>0 && m.kt[1] > 0 && m.kt[2] > 0 &&!TIR(r,i,n_i,n_t)) {
+	  if (m.kt[0]>0 && m.kt[1] > 0 && m.kt[2] > 0 &&!TIR(r,i,n_i,n_t)) {
 		   vec3f normN = N.normalize();
 		   vec3f dir = r.getDirection().normalize();
 		   if (normal_flip)
@@ -91,7 +122,7 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		   ray r3 = ray(r.at(i.t), T.normalize());
 		   
 		   I += (m.kt.multEach(traceRay(scene, r3, thresh, depth-1)));
-	   }*/
+	   }
 	  return I.clamp();
 
 
@@ -99,8 +130,42 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		// No intersection.  This ray travels to infinity, so we color
 		// it according to the background color, which in this (simple) case
 		// is just black.
+		vec3f n = scene->getCamera()->look.normalize();
+		/*bool intersectPlane(const Vec3f & n, const Vec3f & p0, const Vec3f & l0, const Vec3f & l, float& t)
+		{*/
+		// assuming vectors are all 
+		bool intersect = true;
+		vec3f dir = r.getDirection();
+		float denom = n.dot(dir);
+		float t = 0;
+		vec3f target;
+		vec3f p0 = n * dist;
+		if (denom > 1e-6) {
+			vec3f p = p0 - r.getPosition();
+			t = p.dot(n) / denom;
+			target = t * r.getDirection() + r.getPosition();
+		}
+		vec3f ldir = scene->getCamera()->u.normalize();//idont konw
+		vec3f udir = scene->getCamera()->u.cross(scene->getCamera()->look).normalize(); //it wierd but is fact
+		ray rightline = ray(origin, -udir);
+		ray topline = ray(origin, -ldir);
+		double getcol = rightline.getDistance(target) / wbackground;
+		double getrow = topline.getDistance(target) / hbackground;
+		if (backgroundImage != nullptr) {
+			//cout << 3 * (int)(getcol * m_width) << "| " << (int)getrow * m_height << endl;
+			if (getcol < 1.0 && getrow < 1.0) {
+				int col = (int)(getcol * m_width);
+				int row = (int)(getrow * m_height);
+				double r = backgroundImage[3 * (col + row * m_width)] / 255.0;
+				double g = backgroundImage[3 * (col + row * m_width) + 1] / 255.0;
+				double b = backgroundImage[3 * (col + row * m_width) + 2] / 255.0;
+				return {r,g,b};
+			}
 
-		return vec3f( 0.0, 0.0, 0.0 );
+		}
+		return vec3f(0, 0, 0);
+
+	
 	}
 
 
@@ -171,6 +236,7 @@ bool RayTracer::loadScene( char* fn )
 	return true;
 }
 
+
 void RayTracer::traceSetup( int w, int h )
 {
 	if( buffer_width != w || buffer_height != h )
@@ -180,8 +246,9 @@ void RayTracer::traceSetup( int w, int h )
 
 		bufferSize = buffer_width * buffer_height * 3;
 		delete [] buffer;
-		buffer = new unsigned char[ bufferSize ];
+		buffer = new unsigned char[bufferSize];
 	}
+ 
 	memset( buffer, 0, w*h*3 );
 }
 
@@ -212,7 +279,6 @@ void RayTracer::tracePixel( int i, int j )
 	col = trace( scene,x,y );
 
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
-
 	pixel[0] = (int)( 255.0 * col[0]);
 	pixel[1] = (int)( 255.0 * col[1]);
 	pixel[2] = (int)( 255.0 * col[2]);

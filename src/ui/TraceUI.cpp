@@ -11,6 +11,8 @@
 
 #include "TraceUI.h"
 #include "../RayTracer.h"
+#include "../fileio/bitmap.h"
+#define Map(A,i,j,W)  *((char*)A+(i+ 3 * (W)*j))
 
 static bool done;
 
@@ -39,6 +41,32 @@ void TraceUI::cb_load_scene(Fl_Menu_* o, void* v)
 
 		pUI->m_mainWindow->label(buf);
 	}
+}
+
+bool TraceUI::cb_load_image(Fl_Menu_* o, void* v) {
+
+	unsigned char* data;
+	int				width,height;
+	char* fname;
+	TraceUI* pUI = whoami(o);
+
+	char* newfile = fl_file_chooser("Open File?", "*.bmp", "");
+	if (newfile != nullptr) {
+		if ((data = readBMP(newfile, width, height)) == NULL)
+		{
+			fl_alert("Can't load bitmap file");
+			return 0;
+		}
+		pUI->m_nWidth = width;
+		pUI->m_nHeight = height;
+		if (pUI->m_rgbaBitMap) delete[] pUI->m_rgbaBitMap;
+		pUI->m_rgbaBitMap = data;
+		pUI->raytracer->backgroundImage = pUI->m_rgbaBitMap;
+		pUI->raytracer->m_width = width;
+		pUI->raytracer->m_height = height;
+	}
+
+	return 1;
 }
 
 void TraceUI::cb_save_image(Fl_Menu_* o, void* v) 
@@ -109,9 +137,25 @@ void TraceUI::cb_render(Fl_Widget* o, void* v)
 		pUI->m_traceGlWindow->resizeWindow( width, height );
 
 		pUI->m_traceGlWindow->show();
-
-		pUI->raytracer->traceSetup(width, height);
 		
+		pUI->raytracer->traceSetup(width, height);
+		// int skip = pUI->m_nWidth/width;
+		 //int ib = 0;
+		 //int jb = 0;
+		 //if (pUI->m_rgbaBitMap != nullptr) {
+		 //	for (int i = 0;i < height;i++) {
+		 //		jb = 0;
+		 //		for (int j = 0;j < width;j++) {
+		 //			Map(pUI->raytracer->buffer, 3 * j, i, width) = Map(pUI->m_rgbaBitMap, 3 * jb, ib, pUI->m_nWidth);
+		 //			Map(pUI->raytracer->buffer, 3 * j + 1, i, width) = Map(pUI->m_rgbaBitMap, 3 * jb + 1, ib, pUI->m_nWidth);
+		 //			Map(pUI->raytracer->buffer, 3 * j + 2, i, width) = Map(pUI->m_rgbaBitMap, 3 * jb + 2, ib, pUI->m_nWidth);
+		 //			jb += skip;
+		 //		}
+		 //		ib += 1;
+		 //		if (height > pUI->m_nHeight)
+		 //			break;
+		 //	}
+		 //}
 		// Save the window label
 		const char *old_label = pUI->m_traceGlWindow->label();
 
@@ -204,6 +248,7 @@ int TraceUI::getDepth()
 Fl_Menu_Item TraceUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
 		{ "&Load Scene...",	FL_ALT + 'l', (Fl_Callback *)TraceUI::cb_load_scene },
+		{ "&Load Image...",	FL_ALT + 'l', (Fl_Callback*)TraceUI::cb_load_image },
 		{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)TraceUI::cb_save_image },
 		{ "&Exit",			FL_ALT + 'e', (Fl_Callback *)TraceUI::cb_exit },
 		{ 0 },

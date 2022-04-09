@@ -23,6 +23,7 @@ inline double minimum( double a, double b )
 {
 	return a < b ? a : b;
 }
+#define Map(A,i,j,W)  *((char*)A+(i+ 3 * (W)*j))
 
 inline double maximum( double a, double b )
 {

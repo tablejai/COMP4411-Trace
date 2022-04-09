@@ -582,3 +582,5 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 		throw ParseError( string( "Unrecognized object: " ) + name );
 	}
 }
+
+

@@ -42,7 +42,8 @@ public:
 
 	int			getSize();
 	int			getDepth();
-
+	int	m_nWidth, m_nHeight;
+	unsigned char* m_rgbaBitMap =nullptr;
 private:
 	RayTracer*	raytracer;
 
@@ -52,16 +53,14 @@ private:
 
 // static class members
 	static Fl_Menu_Item menuitems[];
-
 	static TraceUI* whoami(Fl_Menu_* o);
-
+	static bool cb_load_image(Fl_Menu_*o, void*v);
 	static void cb_load_scene(Fl_Menu_* o, void* v);
 	static void cb_save_image(Fl_Menu_* o, void* v);
 	static void cb_exit(Fl_Menu_* o, void* v);
 	static void cb_about(Fl_Menu_* o, void* v);
 
 	static void cb_exit2(Fl_Widget* o, void* v);
-
 	static void cb_sizeSlides(Fl_Widget* o, void* v);
 	static void cb_depthSlides(Fl_Widget* o, void* v);
 	static void cb_thresholdSlides(Fl_Widget* o, void* v);
