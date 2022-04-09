@@ -7,7 +7,6 @@ bool Cylinder::intersectLocal( const ray& r, isect& i ) const
 	i.obj = this;
 
 	//cout<<this->getMaterial().kt[0]<<"from interect" << endl;
-	cout << "intersect" << endl;
 	if( intersectCaps( r, i ) ) {
 		isect ii;
 		if( intersectBody( r, ii ) ) {

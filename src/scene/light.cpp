@@ -93,10 +93,7 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 	vec3f Q = ry.at(I.t);
 	vec3f d = ry.getDirection();
 	vec3f result = { 1, 1, 1 };
-	int i = 0;
 	while (scene->intersect(ry, I)) {
-		i++;
-		cout << i << endl;
 		/*if ((distance -I.t) < RAY_EPSILON) 
 		{
 			cout << "xxx" << endl;
@@ -107,7 +104,7 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 		result[0]*=(I.getMaterial().kt)[0];
 		result[1] *= (I.getMaterial().kt)[1];
 		result[2] *= (I.getMaterial().kt)[2];
-		cout << (I.getMaterial().kt)[1] << endl;
+//		cout << (I.getMaterial().kt)[1] << endl;
 	}
 
 	/*if (I.getMaterial() != nullptr)

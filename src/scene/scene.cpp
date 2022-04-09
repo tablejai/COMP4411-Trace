@@ -152,7 +152,7 @@ bool Scene::intersect( const ray& r, isect& i ) const
 		if( (*j)->intersect( r, cur ) ) {
 			if( !have_one || (cur.t < i.t) ) {
 				i = cur;
-				cout << cur.obj->getMaterial().kt[0] << "from scene inter 1" << endl;
+		//		cout << cur.obj->getMaterial().kt[0] << "from scene inter 1" << endl;
 				have_one = true;
 			}
 		}
@@ -164,7 +164,7 @@ bool Scene::intersect( const ray& r, isect& i ) const
 			if( !have_one || (cur.t < i.t) ) {
 				i = cur;
 				have_one = true;
-				cout << cur.obj->getMaterial().kt[0] << "from scene inter 2" << endl;
+			//	cout << cur.obj->getMaterial().kt[0] << "from scene inter 2" << endl;
 
 			}
 		}
