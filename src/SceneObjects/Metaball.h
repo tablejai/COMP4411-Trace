@@ -6,7 +6,6 @@
 typedef struct {
 	vec3f pos;
 	double density;
-	double radius;
 }MBall;
 
 typedef struct
