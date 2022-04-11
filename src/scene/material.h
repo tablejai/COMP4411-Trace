@@ -8,6 +8,7 @@
 #define __MATERIAL_H__
 
 #include "../vecmath/vecmath.h"
+#include "Texture.h"
 
 class Scene;
 class ray;
@@ -42,6 +43,7 @@ public:
     double shininess;
     double index;               // index of refraction
 
+    Texture diffuseTexture;
     
                                 // material with zero coeffs for everything
                                 // as opposed to the "default" material which is
