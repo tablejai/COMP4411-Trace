@@ -20,6 +20,7 @@
 #include "../SceneObjects/Sphere.h"
 #include "../SceneObjects/Square.h"
 #include "../scene/light.h"
+#include "../SceneObjects/Metaball.h"
 #include <iostream>
 using namespace std;
 typedef map<string,Material*> mmap;
@@ -326,7 +327,9 @@ static void processGeometry( string name, Obj *child, Scene *scene,
 		} else if( name == "square" ) {
 			obj = new Square( scene, mat );
 		}
-
+		else if (name == "metaballs") {
+			obj = new Metaball(scene,mat);
+		}
         obj->setTransform(transform);
 		scene->add(obj);
 	}
@@ -567,7 +570,8 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 				name == "scale" ||
 				name == "transform" ||
                 name == "trimesh" ||
-                name == "polymesh") { // polymesh is for backwards compatibility.
+                name == "polymesh"||
+				name == "metaballs") { // polymesh is for backwards compatibility.
 		processGeometry( name, child, scene, materials, &scene->transformRoot);
 		//scene->add( geo );
 	} else if( name == "material" ) {

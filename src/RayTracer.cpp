@@ -114,32 +114,33 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		   normal_flip = true;
 
 	   }
-	  if (m.kt[0]>0 && m.kt[1] > 0 && m.kt[2] > 0 &&!TIR(r,i,n_i,n_t)) {
-		vec3f col;
-		if (1.0f - scene->threshold < I.length())
-		{
-			const ray reflectRay(r.at(i.t), r.getDirection() - 2 * r.getDirection().dot(i.N) * i.N);
-			col = traceRay(scene, reflectRay, thresh, depth + 1);
-			col = prod(col, m.kr);
-			vec3f N = i.N;
-			vec3f Li = -r.getDirection();
-			vec3f R = (2 * N.dot(Li) * N - Li);
-			R = R.normalize();
-			ray r2 = ray(r.at(i.t), R);
-			I += (m.kr.multEach(traceRay(scene, r2, thresh, depth - 1)));
-			double angle;
-			bool normal_flip;
-			if (r.getDirection().dot(i.N)<0) { //into
-				n_i =1;
-				n_t = m.index;
-				normal_flip = false;
-			}
-			else {
-				n_i = m.index;
-				n_t = 1;
-				normal_flip = true;
-			}
-		}
+	   if (m.kt[0] > 0 && m.kt[1] > 0 && m.kt[2] > 0 && !TIR(r, i, n_i, n_t)) {
+		   vec3f col;
+		   if (1.0f - scene->threshold < I.length())
+		   {
+			   const ray reflectRay(r.at(i.t), r.getDirection() - 2 * r.getDirection().dot(i.N) * i.N);
+			   col = traceRay(scene, reflectRay, thresh, depth + 1);
+			   col = prod(col, m.kr);
+			   vec3f N = i.N;
+			   vec3f Li = -r.getDirection();
+			   vec3f R = (2 * N.dot(Li) * N - Li);
+			   R = R.normalize();
+			   ray r2 = ray(r.at(i.t), R);
+			   I += (m.kr.multEach(traceRay(scene, r2, thresh, depth - 1)));
+			   double angle;
+			   bool normal_flip;
+			   if (r.getDirection().dot(i.N) < 0) { //into
+				   n_i = 1;
+				   n_t = m.index;
+				   normal_flip = false;
+			   }
+			   else {
+				   n_i = m.index;
+				   n_t = 1;
+				   normal_flip = true;
+			   }
+		   }
+	   }
 
 
 
@@ -152,10 +153,10 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		   ray r3 = ray(r.at(i.t), T.normalize());
 		   
 		   I += (m.kt.multEach(traceRay(scene, r3, thresh, depth-1)));
-	   }
+	   }*/
 	  return I.clamp();
 
-*/
+
 	} else {
 		// No intersection.  This ray travels to infinity, so we color
 		// it according to the background color, which in this (simple) case
