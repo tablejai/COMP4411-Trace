@@ -116,6 +116,8 @@
     </ClCompile>
     <ClCompile Include="src\SceneObjects\Metaball.cpp">
       <Filter>Source Files\SceneObjects</Filter>
+    <ClCompile Include="src\scene\Texture.cpp">
+      <Filter>Source Files\scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +177,8 @@
     </ClInclude>
     <ClInclude Include="src\SceneObjects\Metaball.h">
       <Filter>Header Files\SceneObjects.</Filter>
+    <ClInclude Include="src\scene\Texture.h">
+      <Filter>Header Files\scene.</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

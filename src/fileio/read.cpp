@@ -438,6 +438,10 @@ static Material *processMaterial( Obj *child, mmap *bindings )
     if( hasField( child, "diffuse" ) ) {
         mat->kd = tupleToVec( getField( child, "diffuse" ) );
     }
+    if( hasField( child, "diffuse_map" ) ) {
+		const Obj* pField = getField(child, "diffuse_map");
+		mat->diffuseTexture.loadFile(pField->getString().c_str());
+    }
     if( hasField( child, "reflective" ) ) {
         mat->kr = tupleToVec( getField( child, "reflective" ) );
     } else {
