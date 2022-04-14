@@ -22,6 +22,7 @@
 #include "../scene/light.h"
 #include "../SceneObjects/Metaball.h"
 #include "../SceneObjects/Quadric.h"
+#include "../scene/Texture.h"
 
 #include <iostream>
 using namespace std;
@@ -431,6 +432,7 @@ static Material *processMaterial( Obj *child, mmap *bindings )
 {
     Material *mat;
     mat = new Material();
+	mat->diffuseTexture.hasTexture = false;
 	
     if( hasField( child, "emissive" ) ) {
         mat->ke = tupleToVec( getField( child, "emissive" ) );
@@ -446,7 +448,13 @@ static Material *processMaterial( Obj *child, mmap *bindings )
     }
     if( hasField( child, "texture" ) ) {
 		const Obj* pField = getField(child, "texture");
-		mat->diffuseTexture.loadFile(strdup(pField->getString().c_str()));
+		char* arg = strdup(pField->getString().c_str());
+		if (strcmp(arg, "Marble") == 0) {
+			mat->isMarble = true;
+			mat->marble.generate_noise();
+		}
+		else
+			mat->diffuseTexture.loadFile(arg);
     }
     if( hasField( child, "reflective" ) ) {
         mat->kr = tupleToVec( getField( child, "reflective" ) );

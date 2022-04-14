@@ -18,7 +18,7 @@ vec3f Material::textureMapping(const ray& r, const isect& i) const
 		u = 1 - u;
 	}
 	double v = acosf(globalP.dot(globalN)) / M_PI;
-	return diffuseTexture.getPixelColor(u, v);
+	return isMarble? marble.getPixelColor(u,v) : diffuseTexture.getPixelColor(u, v);
 }
 vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 {
@@ -26,7 +26,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	vec3f I;
 	vec3f targetPt = r.at(i.t) ;
 	I = ke+ ka.multEach(scene->Ia);
-	vec3f diff_mult = diffuseTexture.hasTexture ? textureMapping(r, i) : kd;
+	vec3f diff_mult = diffuseTexture.hasTexture || isMarble ? textureMapping(r, i) : kd;
 	for (auto iter = scene->beginLights();iter != scene->endLights();iter  = next(iter,1)) {
 		Light* light = *iter;
 

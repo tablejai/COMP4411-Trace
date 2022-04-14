@@ -46,6 +46,8 @@ public:
     double index;               // index of refraction
 
     Texture diffuseTexture;
+    Marble marble;
+    bool isMarble = false;
     
                                 // material with zero coeffs for everything
                                 // as opposed to the "default" material which is
