@@ -9,6 +9,7 @@
 
 #include "../vecmath/vecmath.h"
 #include "Texture.h"
+#include <vector>
 
 class Scene;
 class ray;
@@ -32,6 +33,7 @@ public:
         : ke( e ), ka( a ), ks( s ), kd( d ), kr( r ), kt( t ), shininess( sh ), index( in ) {}
 
 	virtual vec3f shade( Scene *scene, const ray& r, const isect& i ) const;
+    vec3f textureMapping(const ray& r, const isect& i)const ;
 
     vec3f ke;                    // emissive
     vec3f ka;                    // ambient
@@ -44,6 +46,8 @@ public:
     double index;               // index of refraction
 
     Texture diffuseTexture;
+    Marble marble;
+    bool isMarble = false;
     
                                 // material with zero coeffs for everything
                                 // as opposed to the "default" material which is

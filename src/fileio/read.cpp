@@ -23,6 +23,8 @@
 #include "../SceneObjects/Metaball.h"
 #include "../SceneObjects/Quadric.h"
 #include "../SceneObjects/ParticleSystem.h"
+#include "../scene/Texture.h"
+
 #include <iostream>
 using namespace std;
 typedef map<string,Material*> mmap;
@@ -434,6 +436,7 @@ static Material *processMaterial( Obj *child, mmap *bindings )
 {
     Material *mat;
     mat = new Material();
+	mat->diffuseTexture.hasTexture = false;
 	
     if( hasField( child, "emissive" ) ) {
         mat->ke = tupleToVec( getField( child, "emissive" ) );
@@ -447,9 +450,15 @@ static Material *processMaterial( Obj *child, mmap *bindings )
     if( hasField( child, "diffuse" ) ) {
         mat->kd = tupleToVec( getField( child, "diffuse" ) );
     }
-    if( hasField( child, "diffuse_map" ) ) {
-		const Obj* pField = getField(child, "diffuse_map");
-		mat->diffuseTexture.loadFile(pField->getString().c_str());
+    if( hasField( child, "texture" ) ) {
+		const Obj* pField = getField(child, "texture");
+		char* arg = strdup(pField->getString().c_str());
+		if (strcmp(arg, "Marble") == 0) {
+			mat->isMarble = true;
+			mat->marble.generate_noise();
+		}
+		else
+			mat->diffuseTexture.loadFile(arg);
     }
     if( hasField( child, "reflective" ) ) {
         mat->kr = tupleToVec( getField( child, "reflective" ) );
