@@ -1,5 +1,7 @@
 
 #include "ParticleSystem.h"
+#include <vector>
+using namespace std;
 int IntegerRand(int min, int max)
 {
 	return rand() % (max - min) + min;
@@ -43,7 +45,7 @@ Particle ParticleSystem::createParticle()
 	else if (r==2) {
 		color = colorInit;
 	}
-	color *= doubleRand(0.5, 1);
+	color *= doubleRand(0.7, 1);
 	Particle particle = { position, velocity, color,d};
 	return particle;
 }
@@ -55,10 +57,12 @@ bool ParticleSystem::intersectLocal(const ray& r, isect& i) const
 	bool intersect = false;
 	vec3f p = r.getPosition();
 	vec3f color(0, 0, 0);
+	double  t = DBL_MAX;
 	for (auto& dot : pts)
 	{
 		if (intersectParticle(dot.position, p, d)) {
 			intersect = true;
+			t = min((dot.position - p).length(),t);
 			color = dot.color;
 		}
 	}
@@ -66,7 +70,7 @@ bool ParticleSystem::intersectLocal(const ray& r, isect& i) const
 	{
 		Material* m = new Material;
 		m->ke = color;
-		i.t = 1000;
+		i.t = t;
 		i.N = -d;
 		i.material = m;
 	}

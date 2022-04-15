@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "../scene/scene.h"
-
+using namespace std;
 
 typedef struct
 {
