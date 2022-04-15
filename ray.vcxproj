@@ -154,6 +154,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SceneObjects\Bump.cpp" />
     <ClCompile Include="src\SceneObjects\Metaball.cpp" />
     <ClCompile Include="src\getopt.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -173,6 +174,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="src\SceneObjects\ParticleSystem.cpp" />
     <ClCompile Include="src\SceneObjects\Quadric.cpp" />
     <ClCompile Include="src\scene\Texture.cpp" />
     <ClCompile Include="src\ui\TraceGLWindow.cpp">
@@ -279,8 +281,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\SceneObjects\Bump.h" />
     <ClInclude Include="src\SceneObjects\Metaball.h" />
     <ClInclude Include="src\RayTracer.h" />
+    <ClInclude Include="src\SceneObjects\ParticleSystem.h" />
     <ClInclude Include="src\SceneObjects\Quadric.h" />
     <ClInclude Include="src\scene\Texture.h" />
     <ClInclude Include="src\ui\TraceGLWindow.h" />

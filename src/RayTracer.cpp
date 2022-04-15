@@ -46,7 +46,7 @@ vec3f RayTracer::trace( Scene *scene, double x, double y )
 		vec3f target  = intersectPlane(scene, r, n, p0);
 		hbackground = topline.getDistance(target);
 		wbackground = rightline.getDistance(target);
-		cout << wbackground << "," << hbackground << endl;
+	//	cout << wbackground << "," << hbackground << endl;
 	}
 	return traceRay( scene, r, vec3f(1.0,1.0,1.0), traceUI->getDepth()).clamp();
 }

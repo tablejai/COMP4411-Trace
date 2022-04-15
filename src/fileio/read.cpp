@@ -22,7 +22,7 @@
 #include "../scene/light.h"
 #include "../SceneObjects/Metaball.h"
 #include "../SceneObjects/Quadric.h"
-
+#include "../SceneObjects/ParticleSystem.h"
 #include <iostream>
 using namespace std;
 typedef map<string,Material*> mmap;
@@ -335,7 +335,10 @@ static void processGeometry( string name, Obj *child, Scene *scene,
 		else if (name == "paraboloid" || name=="hyperbolic" ||name=="sphere") {
 			obj =new Quadric(scene, mat,name);
 		}
-		
+		else if (name == "particles")
+		{
+			obj = new ParticleSystem(scene, mat);
+		}
         obj->setTransform(transform);
 		scene->add(obj);
 	}
@@ -455,7 +458,7 @@ static Material *processMaterial( Obj *child, mmap *bindings )
     }
     if( hasField( child, "transmissive" ) ) {
         mat->kt = tupleToVec( getField( child, "transmissive" ) );
-		cout << mat->kt[0] << "," << mat->kt[1] << ","<<mat->kt[2] << ","<<endl;
+		//cout << mat->kt[0] << "," << mat->kt[1] << ","<<mat->kt[2] << ","<<endl;
 	}
     if( hasField( child, "index" ) ) { // index of refraction
         mat->index = getField( child, "index" )->getScalar();
@@ -581,7 +584,7 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 				name == "transform" ||
                 name == "trimesh" ||
                 name == "polymesh"||
-				name == "metaballs"||name=="paraboloid"|| name == "hyperbolic") { // polymesh is for backwards compatibility.
+				name == "metaballs"||name=="paraboloid"|| name == "hyperbolic"||name=="particles") { // polymesh is for backwards compatibility.
 		processGeometry( name, child, scene, materials, &scene->transformRoot);
 		//scene->add( geo );
 	} else if( name == "material" ) {

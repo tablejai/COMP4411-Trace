@@ -125,9 +125,9 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 		// intersection is not before light
 		if ((distance -= isec.t) < RAY_EPSILON) { return atten; }
 		// a totally un-transparent object
-		cout << isec.getMaterial().kt[0] << ',' <<
+		/*cout << isec.getMaterial().kt[0] << ',' <<
 			isec.getMaterial().kt[1] << ',' <<
-			isec.getMaterial().kt[2] << endl;
+			isec.getMaterial().kt[2] << endl;*/
 		if (isec.getMaterial().kt.iszero()) return { 0,0,0 };
 		tempP = tempr.at(isec.t);
 		tempr = ray(tempP, d);

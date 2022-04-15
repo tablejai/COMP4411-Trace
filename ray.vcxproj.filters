@@ -24,6 +24,8 @@
     <ClCompile Include="src\SceneObjects\Square.cpp" />
     <ClCompile Include="src\SceneObjects\trimesh.cpp" />
     <ClCompile Include="src\SceneObjects\Quadric.cpp" />
+    <ClCompile Include="src\SceneObjects\Bump.cpp" />
+    <ClCompile Include="src\SceneObjects\ParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\SceneObjects\Metaball.h" />
@@ -47,6 +49,8 @@
     <ClInclude Include="src\SceneObjects\Square.h" />
     <ClInclude Include="src\SceneObjects\trimesh.h" />
     <ClInclude Include="src\SceneObjects\Quadric.h" />
+    <ClInclude Include="src\SceneObjects\Bump.h" />
+    <ClInclude Include="src\SceneObjects\ParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
