@@ -137,22 +137,26 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 }
 
 double SpotLight::effect(double dir)const {
-	if (dir >= theta) return 1;
-	if (dir < phi) return 0;
-	double out_in_diff = theta - phi;
-	double effect_output =  -2 * pow((dir - phi) / (out_in_diff), 3) + 3 * pow((dir - theta) / (out_in_diff), 2);
-	return effect_output;
+	if (dir < theta && dir >= phi) {
+		double out_in_diff = theta - phi;
+		double effect_output =  -2 * pow((dir - phi) / (out_in_diff), 3);
+		effect_output += 3 * pow((dir - theta) / (out_in_diff), 2);
+		return effect_output;
+	}
+	else if (dir >= theta) return 1.0f;
+	else if (dir < phi) return 0.0f;
+	return 0.0f;
 }
 
 vec3f SpotLight::shadowAttenuation(const vec3f& P) const
 {
     // YOUR CODE HERE:
     // You should implement shadow-handling code here.
-	const vec3f dd = getDirection(P);
+	vec3f dd = this->getDirection(P);
+	vec3f atten = color * effect(dd.dot(-dir));;
 
 	isect intersection;
-	const ray ray(P, dd);
-	auto atten = color * effect(dd.dot(-dir));;
+	ray ray(P, dd);
 	if (scene->intersect(ray, intersection))
 	{
 		atten = prod(intersection.getMaterial().kt, atten);
