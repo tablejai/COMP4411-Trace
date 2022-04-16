@@ -305,7 +305,7 @@ TraceUI::TraceUI() {
         m_thresholdSlider->labelsize(12);
 		m_thresholdSlider->minimum(0.0);
 		m_thresholdSlider->maximum(1.0);
-		m_thresholdSlider->step(0.1);
+		m_thresholdSlider->step(0.01);
 		m_thresholdSlider->value(0.0);
 		m_thresholdSlider->align(FL_ALIGN_RIGHT);
 		m_thresholdSlider->callback(cb_thresholdSlides);

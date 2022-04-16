@@ -95,7 +95,7 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		// rays.
 		const Material& m = i.getMaterial();
 		vec3f I = m.shade(scene, r, i);
-		if (I.length() > scene->threshold) {
+		if (I.length() > (1.0 - scene->threshold)) {
 			return I;
 		}
 		vec3f N = i.N;
