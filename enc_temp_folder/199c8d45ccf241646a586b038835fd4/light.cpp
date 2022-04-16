@@ -12,12 +12,31 @@ double DirectionalLight::distanceAttenuation( const vec3f& P ) const
 vec3f DirectionalLight::shadowAttenuation( const vec3f& P ) const
 {
 	
-	
+	//return { 1,1,1 };
+	/*vec3f result = { 1, 1, 1 };
+	ray ry(P, getDirection(P));
+	vec3f Q = ry.at(I.t);
+
+	double distance = P.distance(P);
+
+	while (scene->intersect(ry, I)) {
+		if ((distance - I.t) < RAY_EPSILON)
+		{
+			return vec3f{ 0,0,0 };
+		}
+		Q = ry.at(I.t);
+		ry = ray(Q, ry.getDirection());
+		result[0] *= (I.getMaterial().kt)[0];
+		result[1] *= (I.getMaterial().kt)[1];
+		result[2] *= (I.getMaterial().kt)[2];
+	}
+	return result;*/
 	const vec3f& d = getDirection(P);
 	vec3f r(1.0, 1.0, 1.0);
 	// push the point outwards a bit so that the ray won't hit itself
 	vec3f p = P + d * RAY_EPSILON;
 	isect i;
+
 	while (!r.iszero())
 	{
 		ray s(p, d);
@@ -27,6 +46,7 @@ vec3f DirectionalLight::shadowAttenuation( const vec3f& P ) const
 			return r;
 		}
 		Material m = i.getMaterial();
+
 		r = r.multEach(m.kt);
 		p = s.at(i.t) + d * RAY_EPSILON;
 	}
