@@ -73,7 +73,7 @@ bool Metaball::isPlane(const vector<MBall>& mballs,ray r,vec3f&N, double t) cons
 			double x = r.at(t)[0];
 			double y = r.at(t)[1];
 			double z = r.at(t)[2];
-			double dx, dy, dz = 0.01;
+			double dx = 0.01, dy = 0.01, dz = 0.01;
 			#define F(x,y,z) getDensity(mballs,{x,y,z})
 			N = vec3f{F(x + dx, y, z) - F(x, y, z), F(x, y + dy, z) - F(x, y, z), F(x, y, z + dz) - F(x, y, z)};
 			return true;
