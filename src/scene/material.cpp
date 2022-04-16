@@ -25,6 +25,8 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	// YOUR CODE HERE
 	vec3f I;
 	vec3f targetPt = r.at(i.t) ;
+	vec3f one = { 1.0, 1.0, 1.0 };
+	vec3f transparency = one - kt;
 	I = ke+ ka.multEach(scene->Ia);
 	vec3f diff_mult = diffuseTexture.hasTexture || isMarble ? textureMapping(r, i) : kd;
 	for (auto iter = scene->beginLights();iter != scene->endLights();iter  = next(iter,1)) {
@@ -38,6 +40,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 		vec3f V = -r.getDirection();
 		vec3f R = 2 * N.dot(Li) * N - Li;
 		vec3f diff = max(0, (N.dot(Li))) * diff_mult;
+		diff = prod(diff, transparency);
 		vec3f specular = ks * pow(max(0,V.dot(R)), shininess * 128);
 		I += atten.multEach(light->getColor()).multEach(diff + specular);
 	}
