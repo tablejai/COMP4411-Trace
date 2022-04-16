@@ -95,6 +95,9 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		// rays.
 		const Material& m = i.getMaterial();
 		vec3f I = m.shade(scene, r, i);
+		if (I.length() > scene->threshold) {
+			return I;
+		}
 		vec3f N = i.N;
 		vec3f Li = -r.getDirection();
 		vec3f R = (2 * N.dot(Li) * N - Li);
@@ -117,7 +120,6 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 
 	   //if (m.kt[0] > 0 && m.kt[1] > 0 && m.kt[2] > 0 && !TIR(r, i, n_i, n_t)) {
 		  // vec3f col;
-		  // if (1.0f - scene->threshold < I.length())
 		  // {
 			 //  const ray reflectRay(r.at(i.t), r.getDirection() - 2 * r.getDirection().dot(i.N) * i.N);
 			 //  col = traceRay(scene, reflectRay, thresh, depth + 1);
@@ -152,6 +154,7 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 
 		   I += (m.kt.multEach(traceRay(scene, r3, thresh, depth - 1)));
 	   }
+
 
 
 
