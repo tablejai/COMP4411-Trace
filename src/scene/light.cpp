@@ -58,7 +58,7 @@ double PointLight::distanceAttenuation( const vec3f& P ) const
 	// of the light based on the distance between the source and the 
 	// point P.  For now, I assume no attenuation and just return 1.0
 	double dist = (P-position).length();
-	//cout << c << "," << l << "," << q << endl;
+	cout << c << "," << l << "," << q << endl;
 	return min(1, 1 / (c + l * dist + q* dist * dist));
 }
 
