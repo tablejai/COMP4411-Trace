@@ -108,7 +108,21 @@ bool Quadric::intersectLocal(const ray& r, isect& i) const
 	return true;
 		
 
-		}
+		//Compute t0 and if t0 > 0 then done else compute t1
+		//Once t is found compute Ri = (xi yi zi)
+		//To compute Rn which is the normal at Ri take the partial derivatives of F with respect to x, y, z
+		//Rn = [xn yn zn] = [dF / dx dF / dy dF / dz]
+
+		//which gives
+		//xn = 2 * A * xi + D * yi + E * zi + G
+		//yn = 2 * B * yi + D * xi + F * zi + H
+		//z n = 2 * C * zi + E * xi + F * yi + I
+
+		//Rn must be normalized and also we have to find the normal for surface facing the ray.
+		//If R* Rd > 0 then reverse Rn.
+
+		//Unit Quadric Shape Definitions(all shapes centered about origin(0, 0, 0) and are of size 1)
+}
 
 
 

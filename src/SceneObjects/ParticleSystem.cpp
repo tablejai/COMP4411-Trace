@@ -15,7 +15,7 @@ double doubleRand(double low, double high)
 ParticleSystem::ParticleSystem(Scene* scene, Material* mat)
 	: MaterialSceneObject(scene, mat)
 {
-	parameter(vec3f( 0,0,0 ), vec3f( 0,1,0 ), vec3f( 1,0,0 ), vec3f( 0,0,1 ), vec3f( 0,-0.009,0 ), vec3f( 0,0,1 ), 0.02, 0.1, 1, 50, 1, 2000);
+	parameter(vec3f( 0,0,0 ), vec3f( 0,2,0 ), vec3f( 1,0,0 ), vec3f( 0,0,1 ), vec3f( 0,-0.009,0 ), vec3f( 0,1,1 ), 0.02, 0.1, 0.7, 50, 1, 2000);
 	pts.clear();
 	for (int i = 0;i < count; i++)
 	{
@@ -38,14 +38,13 @@ Particle ParticleSystem::createParticle()
 	double d = doubleRand(dmin, dmax);
 	int r = IntegerRand(0, 3);
 	vec3f color;
-
 	if (r==1) {
 		color = { 1,1,1 };
 	}
-	else if (r==2) {
+	else  {
 		color = colorInit;
 	}
-	color *= doubleRand(0.7, 1);
+	color *= doubleRand(0.9, 1);
 	Particle particle = { position, velocity, color,d};
 	return particle;
 }
@@ -58,18 +57,23 @@ bool ParticleSystem::intersectLocal(const ray& r, isect& i) const
 	vec3f p = r.getPosition();
 	vec3f color(0, 0, 0);
 	double  t = DBL_MAX;
+	double kt = -99999;
 	for (auto& dot : pts)
 	{
-		if (intersectParticle(dot.position, p, d)) {
+		double diff;
+		if (intersectParticle(dot.position, p, d,diff)) {
 			intersect = true;
 			t = min((dot.position - p).length(),t);
+			kt = max(kt,abs(diff/0.007));
 			color = dot.color;
 		}
+
 	}
 	if (intersect)
 	{
 		Material* m = new Material;
 		m->ke = color;
+
 		i.t = t;
 		i.N = -d;
 		i.material = m;
