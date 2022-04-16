@@ -26,6 +26,8 @@
 #include "../scene/Texture.h"
 
 #include <iostream>
+
+#define M_PI 3.14159265358979323846
 using namespace std;
 typedef map<string,Material*> mmap;
 
@@ -603,6 +605,15 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 	} 
 	else if (name == "ambient_light") {
 		processAmbientLight(child,scene);
+	}
+	else if (name == "spot_light") {
+		scene->add(new SpotLight(scene,
+			tupleToVec(getField(child, "position")),
+			tupleToVec(getColorField(child)),
+			tupleToVec(getField(child, "direction")).normalize(),
+			getField(child, "size")->getScalar(),
+			getField(child, "blend")->getScalar()
+		));
 	}
 	else {
 		throw ParseError( string( "Unrecognized object: " ) + name );
