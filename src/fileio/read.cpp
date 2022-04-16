@@ -575,7 +575,7 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 		if (hasField(child,"constant_attenuation_coeff")) {
 			pt->c = getField(child, "constant_attenuation_coeff")->getScalar();
 		}
-		if (hasField(child, "linear_attenuation_coedd")) {
+		if (hasField(child, "linear_attenuation_coeff")) {
 			pt->l = getField(child, "linear_attenuation_coeff")->getScalar();
 		}
 		if(hasField(child,"quadratic_attenuation_coeff"))
